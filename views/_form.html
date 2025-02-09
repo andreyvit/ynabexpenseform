@@ -1,50 +1,66 @@
 {{ define "_form.html" }}
-<form action="/enter" method="POST" class="flex flex-col gap-2" data-turbo="true">
+<form action="/enter" method="POST" class="flex flex-col gap-4 bg-white shadow-sm ring-1 ring-gray-900/5 p-6 rounded-lg" data-turbo="true">
   <input type="hidden" name="mock" value="{{.Mock}}">
 
-  <label class="flex flex-col gap-1">
-    <span>Date</span>
-    <input type="date" name="date" class="border px-2 py-1" value="{{ .DefaultDate | isodate }}" />
+  <div class="grid grid-cols-2 gap-4">
+    <label class="flex flex-col gap-1.5">
+      <span class="text-sm font-medium text-gray-700">Date</span>
+      <input type="date" name="date" 
+        class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6" 
+        value="{{ .DefaultDate | isodate }}" />
+    </label>
+
+    <label class="flex flex-col gap-1.5">
+      <span class="text-sm font-medium text-gray-700">Amount</span>
+      <input type="number" step="0.01" name="amount" 
+        class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6" 
+        placeholder="0.00" />
+    </label>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <label class="flex flex-col gap-1.5">
+      <span class="text-sm font-medium text-gray-700">Category</span>
+      <select name="category" 
+        class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6 appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Im0zIDUgMyAzIDMtMyIvPjwvc3ZnPg==')] bg-[position:right_0.75rem_center] bg-[length:0.75em_0.75em] bg-no-repeat pr-10">
+        <option value="" disabled selected>(select)</option>
+        {{ range .Categories }}
+        <option value="{{.ID}}">{{.Name}}</option>
+        {{ end }}
+      </select>
+    </label>
+
+    <label class="flex flex-col gap-1.5">
+      <span class="text-sm font-medium text-gray-700">Account</span>
+      <select name="account" 
+        class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6 appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Im0zIDUgMyAzIDMtMyIvPjwvc3ZnPg==')] bg-[position:right_0.75rem_center] bg-[length:0.75em_0.75em] bg-no-repeat pr-10">
+        {{ range .Accounts }}
+        <option value="{{.ID}}">{{.Name}}</option>
+        {{ end }}
+      </select>
+    </label>
+  </div>
+
+  <label class="flex flex-col gap-1.5">
+    <span class="text-sm font-medium text-gray-700">Comment</span>
+    <input type="text" name="comment" 
+      class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6" 
+      placeholder="Optional description" />
   </label>
 
-  <label class="flex flex-col gap-1">
-    <span>Category</span>
-    <select name="category" class="border px-2 py-1">
-      <option value="" disabled selected>(select)</option>
-      {{ range .Categories }}
-      <option value="{{.ID}}">{{.Name}}</option>
-      {{ end }}
-    </select>
-  </label>
-
-  <label class="flex flex-col gap-1">
-    <span>Account</span>
-    <select name="account" class="border px-2 py-1">
-      {{ range .Accounts }}
-      <option value="{{.ID}}">{{.Name}}</option>
-      {{ end }}
-    </select>
-  </label>
-
-  <label class="flex flex-col gap-1">
-    <span>Comment</span>
-    <input type="text" name="comment" class="border px-2 py-1" />
-  </label>
-
-  <label class="flex flex-col gap-1">
-    <span>Amount</span>
-    <input type="number" step="0.01" name="amount" class="border px-2 py-1" />
-  </label>
-
-  <label class="flex flex-col gap-1">
-    <span>Currency</span>
-    <select name="currency" class="border px-2 py-1">
+  <label class="flex flex-col gap-1.5">
+    <span class="text-sm font-medium text-gray-700">Currency</span>
+    <select name="currency" 
+      class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6 appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Im0zIDUgMyAzIDMtMyIvPjwvc3ZnPg==')] bg-[position:right_0.75rem_center] bg-[length:0.75em_0.75em] bg-no-repeat pr-10">
       {{ range .Currencies }}
       <option value="{{.Code}}">{{.Code}}</option>
       {{ end }}
     </select>
   </label>
 
-  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Enter</button>
+  <button type="submit" 
+    class="mt-2 w-full rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+    Enter
+  </button>
 </form>
 {{ end }}

@@ -79,8 +79,8 @@ var MockData = map[string]func() *YNABData{
 				c2,
 			},
 			Transactions: []*YNABTransaction{
-				{Date: "2025-01-15", Category: c1, Account: a1, Comment: "Milk", Amount: 3_450},
 				{Date: "2025-01-14", Category: c2, Account: a2, Comment: "", Amount: 12_990},
+				{Date: "2025-01-15", Category: c1, Account: a1, Comment: "Milk", Amount: 3_450},
 			},
 		}
 	},
