@@ -41,6 +41,13 @@ func loadYNABDataWithCaching(ctx context.Context, mock string, fresh bool) (*YNA
 	return data, nil
 }
 
+func clearCache() {
+	cachedDataMut.Lock()
+	defer cachedDataMut.Unlock()
+	cachedData = nil
+	cachedDataTS = time.Time{}
+}
+
 func appendTransactionToCachedData(tx *YNABTransaction) {
 	cachedDataMut.Lock()
 	defer cachedDataMut.Unlock()

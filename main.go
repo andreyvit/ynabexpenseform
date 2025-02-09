@@ -15,14 +15,15 @@ import (
 var configJSON []byte
 
 type AppConfig struct {
-	YNABToken       string           `json:"ynabToken"`
-	BudgetName      string           `json:"budget"`
-	PageTitle       string           `json:"page_title"`
-	Categories      []string         `json:"categories"`
-	Accounts        []string         `json:"accounts"`
-	Currencies      []CurrencyConfig `json:"currencies"`
-	BudgetCurrency  string           `json:"budget_currency"`
-	DefaultCurrency string           `json:"default_currency"`
+	YNABToken         string           `json:"ynabToken"`
+	BudgetName        string           `json:"budget"`
+	PageTitle         string           `json:"page_title"`
+	Categories        []string         `json:"categories"`
+	Accounts          []string         `json:"accounts"`
+	Currencies        []CurrencyConfig `json:"currencies"`
+	BudgetCurrency    string           `json:"budget_currency"`
+	DefaultCurrency   string           `json:"default_currency"`
+	SecondaryCurrency string           `json:"secondary_currency"`
 }
 
 type CurrencyConfig struct {
@@ -49,6 +50,7 @@ func main() {
 
 	http.HandleFunc("GET /{$}", wrap(app.handleIndex))
 	http.HandleFunc("POST /enter", wrap(app.handleEnterExpense))
+	http.HandleFunc("POST /refresh", wrap(app.handleRefresh))
 
 	fmt.Printf("Listening on %s...\n", *addr)
 	log.Fatal(http.ListenAndServe(*addr, nil))

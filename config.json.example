@@ -17,4 +17,5 @@
   ],
   "budget_currency": "USD",
   "default_currency": "GEL",
+  "secondary_currency": "GEL",
 }

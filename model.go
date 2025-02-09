@@ -31,6 +31,11 @@ type YNABAccount struct {
 	Balance Amount `json:"balance"`
 }
 
+type YNABAccountViewModel struct {
+	*YNABAccount
+	SecondaryBalance *Monetary
+}
+
 type YNABCategory struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`

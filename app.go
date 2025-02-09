@@ -3,10 +3,11 @@ package main
 import "fmt"
 
 type App struct {
-	Currencies       []*Currency
-	CurrenciesByCode map[string]*Currency
-	DefaultCurrency  *Currency
-	BudgetCurrency   *Currency
+	Currencies        []*Currency
+	CurrenciesByCode  map[string]*Currency
+	DefaultCurrency   *Currency
+	BudgetCurrency    *Currency
+	SecondaryCurrency *Currency
 }
 
 func New(cfg *AppConfig) (*App, error) {
@@ -34,6 +35,14 @@ func New(cfg *AppConfig) (*App, error) {
 		return nil, fmt.Errorf("budget currency %q not found", cfg.BudgetCurrency)
 	}
 
+	var secondaryCurrency *Currency
+	if cfg.SecondaryCurrency != "" {
+		secondaryCurrency = currenciesByCode[cfg.SecondaryCurrency]
+		if secondaryCurrency == nil {
+			return nil, fmt.Errorf("secondary currency %q not found", cfg.SecondaryCurrency)
+		}
+	}
+
 	orderedCurrencies := make([]*Currency, 0, len(currencies))
 	orderedCurrencies = append(orderedCurrencies, defaultCurrency)
 	for _, c := range currencies {
@@ -44,9 +53,30 @@ func New(cfg *AppConfig) (*App, error) {
 	}
 
 	return &App{
-		Currencies:       orderedCurrencies,
-		CurrenciesByCode: currenciesByCode,
-		DefaultCurrency:  defaultCurrency,
-		BudgetCurrency:   budgetCurrency,
+		Currencies:        orderedCurrencies,
+		CurrenciesByCode:  currenciesByCode,
+		DefaultCurrency:   defaultCurrency,
+		BudgetCurrency:    budgetCurrency,
+		SecondaryCurrency: secondaryCurrency,
 	}, nil
+}
+
+func (app *App) ConvertAmount(amount Amount, from, to *Currency) Amount {
+	if from == to {
+		return amount
+	} else if from == app.BudgetCurrency {
+		return Amount(float64(amount)*to.Rate + 0.5)
+	} else if to == app.BudgetCurrency {
+		return Amount(float64(amount)/from.Rate + 0.5)
+	} else {
+		interim := app.ConvertAmount(amount, from, app.BudgetCurrency)
+		return app.ConvertAmount(interim, app.BudgetCurrency, to)
+	}
+}
+
+func (app *App) Convert(amount Amount, from, to *Currency) Monetary {
+	return Monetary{
+		Amount:   app.ConvertAmount(amount, from, to),
+		Currency: to,
+	}
 }

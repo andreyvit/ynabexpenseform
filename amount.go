@@ -11,3 +11,12 @@ func (a Amount) String() string {
 func (a Amount) RoundedUpToDeciCents() Amount {
 	return (a + 99) / 100 * 100
 }
+
+type Monetary struct {
+	Amount   Amount
+	Currency *Currency
+}
+
+func (m Monetary) String() string {
+	return FormatAmount(m.Amount, m.Currency, false)
+}

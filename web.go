@@ -74,9 +74,21 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) error {
 		transactions = transactions[len(transactions)-30:]
 	}
 
+	accounts := make([]*YNABAccountViewModel, 0, len(data.Accounts))
+	for _, a := range data.Accounts {
+		vm := &YNABAccountViewModel{
+			YNABAccount: a,
+		}
+		if app.SecondaryCurrency != nil {
+			m := app.Convert(a.Balance, app.BudgetCurrency, app.SecondaryCurrency)
+			vm.SecondaryBalance = &m
+		}
+		accounts = append(accounts, vm)
+	}
+
 	// Build data for the template
 	output := struct {
-		Accounts        []*YNABAccount
+		Accounts        []*YNABAccountViewModel
 		Categories      []*YNABCategory
 		Transactions    []*YNABTransaction
 		Currencies      []*Currency
@@ -85,7 +97,7 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) error {
 		DefaultDate     time.Time
 		Mock            string
 	}{
-		Accounts:        data.Accounts,
+		Accounts:        accounts,
 		Categories:      data.Categories,
 		Transactions:    transactions,
 		Currencies:      app.Currencies,
@@ -118,6 +130,12 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	_, err = w.Write(buf2.Bytes())
 	return err
+}
+
+func (app *App) handleRefresh(w http.ResponseWriter, r *http.Request) error {
+	clearCache()
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+	return nil
 }
 
 func (app *App) handleEnterExpense(w http.ResponseWriter, r *http.Request) error {
@@ -166,7 +184,7 @@ func (app *App) handleEnterExpense(w http.ResponseWriter, r *http.Request) error
 			comment = fmt.Sprintf("%s %s", amountComment, comment)
 		}
 
-		amount = Amount(float64(amount)/currency.Rate + 0.5).RoundedUpToDeciCents()
+		amount = app.ConvertAmount(amount, currency, app.BudgetCurrency).RoundedUpToDeciCents()
 	}
 
 	account := data.AccountByID(accID)
