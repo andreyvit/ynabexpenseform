@@ -59,5 +59,5 @@ EOF
 
 SUDO systemctl daemon-reload
 SUDO systemctl enable ynabexpenseform
-SUDO systemctl start ynabexpenseform
+SUDO systemctl restart ynabexpenseform
 /srv/caddy/bin/caddy reload --config /etc/Caddyfile
