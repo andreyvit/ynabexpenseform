@@ -1,0 +1,17 @@
+#!/bin/bash
+set -euo pipefail
+
+source ./config.sh
+test -n "$arch"
+test -n "$server"
+test -n "$password"
+
+service=ynabexpenseform
+
+echo "Deploying to $server ($arch)..."
+set -x
+now=$(date '+%Y-%m-%d-T%H%M%S')
+
+GOOS=linux GOARCH=$arch go build -o "/tmp/$service-linux-$arch-$now" .
+scp "/tmp/$service-linux-$arch-$now" "$server:~/"
+ssh $server bash -s -- $server "$service-linux-$arch-$now" "'$password'"  <deploy-remote.sh

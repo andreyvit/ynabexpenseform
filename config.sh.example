@@ -1,0 +1,5 @@
+# use caddy hash-password here
+password='$2a$14$mJ1kYrVGZxHSHCPW66H0I.CZAHvApI8NQ633g4Rr96PwR3nXy3TKi'
+# amd64, arm64, etc.
+arch=arm64
+server=budget.example.com
