@@ -1,0 +1,20 @@
+{
+  "ynabToken": "YOUR_YNAB_TOKEN",
+  "page_title": "Assistant Expenses",
+  "budget": "Family Budget",
+  "categories": [
+    "Home",
+    "Utilities",
+    "Gifts",
+  ],
+  "accounts": [
+    "Assistant Card",
+    "Assistant Cash",
+  ],
+  "currencies": [
+    {"code": "USD", "format": "$9.99", "rate": 1.0},
+    {"code": "GEL", "format": "₾9.99", "rate": 2.6},
+  ],
+  "budget_currency": "USD",
+  "default_currency": "GEL",
+}

@@ -1,0 +1,4 @@
+github.com/andreyvit/jsonfix v1.1.0 h1:GSkO7REEbgpSb3TiapGaOLJBZrgrlqacdcnYAeEKS4M=
+github.com/andreyvit/jsonfix v1.1.0/go.mod h1:D+50dQUMcVE3/aO6IUkCiqYc44JrYPlJpdBGxVqiBhQ=
+github.com/andreyvit/mvp v0.3.30 h1:dzJpQ5hZMTVB/NekA1TbX+86JYzQN+xw65kqRWK3rq8=
+github.com/andreyvit/mvp v0.3.30/go.mod h1:u/7eZizhA1PJTyDBvaCjogDCiUEjYVw4k3usJsQYv88=
