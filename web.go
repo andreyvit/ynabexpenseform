@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+const maxVisibleTxCount = 100
+
 //go:embed views/*.html
 var viewsFS embed.FS
 
@@ -70,8 +72,8 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) error {
 
 	transactions := slices.Clone(data.Transactions)
 	slices.Reverse(transactions)
-	if len(transactions) > 30 {
-		transactions = transactions[len(transactions)-30:]
+	if len(transactions) > maxVisibleTxCount {
+		transactions = transactions[:maxVisibleTxCount]
 	}
 
 	accounts := make([]*YNABAccountViewModel, 0, len(data.Accounts))
