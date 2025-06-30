@@ -1,18 +1,51 @@
 {{ define "_history.html" }}
 <div class="flex flex-col gap-2 mt-6">
   {{ range .Transactions }}
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-lg p-3 flex flex-col gap-2">
-    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-      <div class="font-medium">{{.Category.Name}}</div>
+  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-lg p-3 flex flex-col gap-2 {{ if .IsTransfer }}border-l-4 border-blue-400{{ end }}">
+    <div class="flex items-baseline gap-x-3">
+      {{ if .IsTransfer }}
+        <div class="font-medium text-blue-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline-block h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+          </svg>
+          Transfer
+        </div>
+      {{ else }}
+        <div class="font-medium">{{.Category.Name}}</div>
+      {{ end }}
       <div class="text-sm text-gray-500">{{.Date}}</div>
       <div class="ml-auto font-medium">{{.Amount | fmtamount $.BudgetCurrency}}</div>
     </div>
-    <div class="flex flex-wrap gap-x-3 gap-y-1 text-sm">
-      <div class="text-gray-500">{{.Account.Name}}</div>
-      {{ if .Comment }}
-      <div class="text-gray-700">{{.Comment}}</div>
-      {{ end }}
-    </div>
+    
+    {{ if .IsTransfer }}
+      <div class="mt-1 text-sm">
+        <div class="grid grid-cols-[4rem_1fr] gap-1">
+          <span class="font-medium text-gray-500">From:</span>
+          <span class="text-gray-700">{{.Account.Name}}</span>
+          
+          <span class="font-medium text-gray-500">To:</span>
+          <span class="text-gray-700">
+            {{ if .TransferAccount }}
+              {{.TransferAccount.Name}}
+            {{ else }}
+              {{.Category.Name | replace "Transfer to " ""}}
+            {{ end }}
+          </span>
+          
+          {{ if .Comment }}
+            <span class="font-medium text-gray-500">Note:</span>
+            <span class="text-gray-700">{{.Comment}}</span>
+          {{ end }}
+        </div>
+      </div>
+    {{ else }}
+      <div class="flex flex-wrap gap-x-3 gap-y-1 text-sm">
+        <div class="text-gray-500">{{.Account.Name}}</div>
+        {{ if .Comment }}
+          <div class="text-gray-700">{{.Comment}}</div>
+        {{ end }}
+      </div>
+    {{ end }}
   </div>
   {{ end }}
 </div>

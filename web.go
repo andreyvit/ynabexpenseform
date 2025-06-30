@@ -40,6 +40,9 @@ func init() {
 		"fmtamount": func(currency *Currency, amount Amount) string {
 			return FormatAmount(amount, currency, false)
 		},
+		"replace": func(s, old, new string) string {
+			return strings.Replace(s, old, new, -1)
+		},
 	})
 	_, err := tmpl.ParseFS(viewsFS,
 		"views/layout.html",
@@ -100,7 +103,7 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) error {
 		Mock            string
 	}{
 		Accounts:        accounts,
-		Categories:      data.Categories,
+		Categories:      data.AllCategories, // Use AllCategories to include transfer options
 		Transactions:    transactions,
 		Currencies:      app.Currencies,
 		DefaultCurrency: app.DefaultCurrency,
@@ -199,12 +202,34 @@ func (app *App) handleEnterExpense(w http.ResponseWriter, r *http.Request) error
 		return fmt.Errorf("category %q not found", catID)
 	}
 
+	// Create transaction object
 	tx := YNABTransaction{
 		Date:     dateStr,
 		Category: category,
 		Account:  account,
 		Comment:  comment,
 		Amount:   amount,
+	}
+
+	// Handle transfer-specific fields
+	if category.IsTransferCategory() {
+		tx.IsTransfer = true
+
+		// Find the target account for the transfer
+		targetID := category.TransferTargetID()
+		for _, a := range data.Accounts {
+			if a.ID == targetID {
+				tx.TransferAccount = a
+				break
+			}
+		}
+
+		// Clean up transfer comments to prevent duplication
+		// If no comment provided for a transfer, leave it empty
+		// YNAB will automatically display it as a transfer
+		if comment == "" {
+			tx.Comment = ""
+		}
 	}
 
 	if mock == "" {
@@ -214,6 +239,7 @@ func (app *App) handleEnterExpense(w http.ResponseWriter, r *http.Request) error
 		}
 	}
 
+	// Add transaction to the cache, including transfer info if applicable
 	appendTransactionToCachedData(&tx)
 
 	http.Redirect(w, r, "/?mock="+url.QueryEscape(mock), http.StatusSeeOther)

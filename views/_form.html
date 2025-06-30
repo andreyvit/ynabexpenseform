@@ -24,9 +24,22 @@
       <select name="category" 
         class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6 appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Im0zIDUgMyAzIDMtMyIvPjwvc3ZnPg==')] bg-[position:right_0.75rem_center] bg-[length:0.75em_0.75em] bg-no-repeat pr-10">
         <option value="" disabled selected>(select)</option>
-        {{ range .Categories }}
-        <option value="{{.ID}}">{{.Name}}</option>
-        {{ end }}
+        
+        <optgroup label="Categories">
+          {{ range .Categories }}
+            {{ if not .IsTransfer }}
+            <option value="{{.ID}}">{{.Name}}</option>
+            {{ end }}
+          {{ end }}
+        </optgroup>
+        
+        <optgroup label="Transfers">
+          {{ range .Categories }}
+            {{ if .IsTransfer }}
+            <option value="{{.ID}}">{{.Name}}</option>
+            {{ end }}
+          {{ end }}
+        </optgroup>
       </select>
     </label>
 
