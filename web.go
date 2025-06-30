@@ -79,7 +79,17 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) error {
 		transactions = transactions[:maxVisibleTxCount]
 	}
 
-	accounts := make([]*YNABAccountViewModel, 0, len(data.Accounts))
+	// Create list of ALL accounts for the form dropdown
+	formAccounts := make([]*YNABAccountViewModel, 0, len(data.Accounts))
+	for _, a := range data.Accounts {
+		vm := &YNABAccountViewModel{
+			YNABAccount: a,
+		}
+		formAccounts = append(formAccounts, vm)
+	}
+
+	// Create list of visible accounts for the balances section
+	balanceAccounts := make([]*YNABAccountViewModel, 0, len(data.Accounts))
 	for _, a := range data.Accounts {
 		// Skip accounts with hidden balances
 		if slices.Contains(app.HideBalance, a.Name) {
@@ -93,12 +103,13 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) error {
 			m := app.Convert(a.Balance, app.BudgetCurrency, app.SecondaryCurrency)
 			vm.SecondaryBalance = &m
 		}
-		accounts = append(accounts, vm)
+		balanceAccounts = append(balanceAccounts, vm)
 	}
 
 	// Build data for the template
 	output := struct {
 		Accounts        []*YNABAccountViewModel
+		BalanceAccounts []*YNABAccountViewModel
 		Categories      []*YNABCategory
 		Transactions    []*YNABTransaction
 		Currencies      []*Currency
@@ -107,7 +118,8 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) error {
 		DefaultDate     time.Time
 		Mock            string
 	}{
-		Accounts:        accounts,
+		Accounts:        formAccounts,       // All accounts for the form dropdown
+		BalanceAccounts: balanceAccounts,    // Only visible accounts for the balances section
 		Categories:      data.AllCategories, // Use AllCategories to include transfer options
 		Transactions:    transactions,
 		Currencies:      app.Currencies,
