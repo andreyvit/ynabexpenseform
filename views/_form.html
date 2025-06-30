@@ -2,7 +2,7 @@
 <form action="/enter" method="POST" class="flex flex-col gap-4 bg-white shadow-sm ring-1 ring-gray-900/5 p-6 rounded-lg" data-turbo="true">
   <input type="hidden" name="mock" value="{{.Mock}}">
 
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-[4fr_4fr_3fr] gap-4">
     <label class="flex flex-col gap-1.5">
       <span class="text-sm font-medium text-gray-700">Date</span>
       <input type="date" name="date"
@@ -12,9 +12,19 @@
 
     <label class="flex flex-col gap-1.5">
       <span class="text-sm font-medium text-gray-700">Amount</span>
-      <input type="number" step="0.01" name="amount"
+      <input type="text" name="amount" inputmode="decimal" pattern="[0-9]*\.?[0-9]*"
         class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
         placeholder="0.00" />
+    </label>
+
+    <label class="flex flex-col gap-1.5">
+      <span class="text-sm font-medium text-gray-700">Currency</span>
+      <select name="currency"
+        class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6 appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Im0zIDUgMyAzIDMtMyIvPjwvc3ZnPg==')] bg-[position:right_0.75rem_center] bg-[length:0.75em_0.75em] bg-no-repeat pr-10">
+        {{ range .Currencies }}
+        <option value="{{.Code}}">{{.Code}}</option>
+        {{ end }}
+      </select>
     </label>
   </div>
 
@@ -59,16 +69,6 @@
     <input type="text" name="comment"
       class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
       placeholder="Optional description" />
-  </label>
-
-  <label class="flex flex-col gap-1.5">
-    <span class="text-sm font-medium text-gray-700">Currency</span>
-    <select name="currency"
-      class="block w-full rounded-md border-0 px-3 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6 appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Im0zIDUgMyAzIDMtMyIvPjwvc3ZnPg==')] bg-[position:right_0.75rem_center] bg-[length:0.75em_0.75em] bg-no-repeat pr-10">
-      {{ range .Currencies }}
-      <option value="{{.Code}}">{{.Code}}</option>
-      {{ end }}
-    </select>
   </label>
 
   <button type="submit"
