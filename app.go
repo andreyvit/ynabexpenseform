@@ -8,6 +8,7 @@ type App struct {
 	DefaultCurrency   *Currency
 	BudgetCurrency    *Currency
 	SecondaryCurrency *Currency
+	HideBalance       []string
 }
 
 func New(cfg *AppConfig) (*App, error) {
@@ -58,6 +59,7 @@ func New(cfg *AppConfig) (*App, error) {
 		DefaultCurrency:   defaultCurrency,
 		BudgetCurrency:    budgetCurrency,
 		SecondaryCurrency: secondaryCurrency,
+		HideBalance:       cfg.HideBalance,
 	}, nil
 }
 

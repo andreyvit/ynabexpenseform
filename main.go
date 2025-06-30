@@ -20,6 +20,7 @@ type AppConfig struct {
 	PageTitle         string           `json:"page_title"`
 	Categories        []string         `json:"categories"`
 	Accounts          []string         `json:"accounts"`
+	HideBalance       []string         `json:"hide_balance"`
 	Currencies        []CurrencyConfig `json:"currencies"`
 	BudgetCurrency    string           `json:"budget_currency"`
 	DefaultCurrency   string           `json:"default_currency"`

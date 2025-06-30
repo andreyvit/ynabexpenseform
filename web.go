@@ -81,6 +81,11 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) error {
 
 	accounts := make([]*YNABAccountViewModel, 0, len(data.Accounts))
 	for _, a := range data.Accounts {
+		// Skip accounts with hidden balances
+		if slices.Contains(app.HideBalance, a.Name) {
+			continue
+		}
+
 		vm := &YNABAccountViewModel{
 			YNABAccount: a,
 		}

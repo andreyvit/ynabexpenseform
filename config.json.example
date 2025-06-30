@@ -14,6 +14,7 @@
     "🐾️ Vet Visits",
   ],
   "accounts": ["SOLO Assistant", "Held By Assistant"],
+  "hide_balance": ["Account Name"],
   "currencies": [
     {"code": "USD", "format": "$9.99", "rate": 1.0},
     {"code": "GEL", "format": "₾9.99", "rate": 2.6},
